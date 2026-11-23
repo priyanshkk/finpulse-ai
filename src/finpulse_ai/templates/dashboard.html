@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Overview - FinPulse AI{% endblock %}
+{% block content %}
+<section class="kpis">
+  <article class="card kpi"><span>Total invoiced</span><strong>₹{{ data.total_invoiced }}</strong><small>{{ data.invoice_count }} invoices</small></article>
+  <article class="card kpi"><span>Total expenses</span><strong>₹{{ data.total_expenses }}</strong><small>{{ data.expense_count }} receipts</small></article>
+  <article class="card kpi accent"><span>Net cashflow</span><strong>₹{{ data.net }}</strong><small>invoiced minus spent</small></article>
+  <article class="card kpi"><span>Outstanding</span><strong>₹{{ data.outstanding }}</strong><small>awaiting payment</small></article>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <div class="card-head"><h2>Cashflow</h2><div class="legend"><i class="swatch blue"></i>Invoiced <i class="swatch pink"></i>Spent</div></div>
+    {{ cashflow | safe }}
+  </article>
+  <article class="card">
+    <div class="card-head"><h2>Spend by category</h2></div>
+    {{ categories | safe }}
+  </article>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <div class="card-head"><h2>Recent invoices</h2><a href="/invoices">View all</a></div>
+    <table><thead><tr><th>Number</th><th>Client</th><th>Date</th><th class="right">Total</th><th>Status</th></tr></thead><tbody>
+      {% for row in data.recent_invoices %}
+      <tr><td class="mono">{{ row.number }}</td><td>{{ row.client }}</td><td>{{ row.issued_at }}</td><td class="right">{{ row.currency }} {{ row.total }}</td><td><span class="pill {{ row.status }}">{{ row.status }}</span></td></tr>
+      {% else %}<tr><td colspan="5" class="empty">No invoices yet.</td></tr>{% endfor %}
+    </tbody></table>
+  </article>
+  <article class="card">
+    <div class="card-head"><h2>Recent expenses</h2><a href="/expenses">View all</a></div>
+    <table><thead><tr><th>Merchant</th><th>Category</th><th>Date</th><th class="right">Amount</th></tr></thead><tbody>
+      {% for row in data.recent_expenses %}
+      <tr><td>{{ row.merchant }}</td><td>{{ row.category }}</td><td>{{ row.spent_at }}</td><td class="right">{{ row.currency }} {{ row.amount }}</td></tr>
+      {% else %}<tr><td colspan="4" class="empty">No expenses yet.</td></tr>{% endfor %}
+    </tbody></table>
+  </article>
+</section>
+{% endblock %}

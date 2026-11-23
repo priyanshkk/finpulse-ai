@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Expenses - FinPulse AI{% endblock %}
+{% block heading %}Expenses{% endblock %}
+{% block subtitle %}Receipts captured manually or through the scanner{% endblock %}
+{% block content %}
+<article class="card">
+  <table>
+    <thead><tr><th>Merchant</th><th>Category</th><th>Date</th><th class="right">Amount</th><th class="right">Tax</th><th>Currency</th><th>Source</th><th>Note</th></tr></thead>
+    <tbody>
+      {% for row in rows %}
+      <tr><td>{{ row.merchant }}</td><td><span class="tag">{{ row.category }}</span></td><td>{{ row.spent_at }}</td><td class="right strong">{{ row.amount }}</td><td class="right">{{ row.tax }}</td><td>{{ row.currency }}</td><td><span class="tag">{{ row.source }}</span></td><td class="muted">{{ row.note or '-' }}</td></tr>
+      {% else %}<tr><td colspan="8" class="empty">No expenses yet. Scan a receipt to add one.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</article>
+{% endblock %}

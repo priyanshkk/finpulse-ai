@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Invoices - FinPulse AI{% endblock %}
+{% block heading %}Invoices{% endblock %}
+{% block subtitle %}Everything you have billed, newest first{% endblock %}
+{% block content %}
+<article class="card">
+  <table>
+    <thead><tr><th>Number</th><th>Vendor</th><th>Client</th><th>Issued</th><th>Due</th><th class="right">Subtotal</th><th class="right">Tax</th><th class="right">Total</th><th>Status</th><th>Source</th></tr></thead>
+    <tbody>
+      {% for row in rows %}
+      <tr><td class="mono">{{ row.number }}</td><td>{{ row.vendor }}</td><td>{{ row.client }}</td><td>{{ row.issued_at }}</td><td>{{ row.due_at }}</td><td class="right">{{ row.subtotal }}</td><td class="right">{{ row.tax }}</td><td class="right strong">{{ row.currency }} {{ row.total }}</td><td><span class="pill {{ row.status }}">{{ row.status }}</span></td><td><span class="tag">{{ row.source }}</span></td></tr>
+      {% else %}<tr><td colspan="10" class="empty">No invoices yet. Seed demo data to see examples.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</article>
+{% endblock %}

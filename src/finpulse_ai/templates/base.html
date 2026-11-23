@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}FinPulse AI{% endblock %}</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="/">
+        <img src="/static/logo.svg" alt="FinPulse AI logo" width="34" height="34">
+        <span>FinPulse <em>AI</em></span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="/" class="{{ 'active' if active == 'dashboard.html' }}">Overview</a>
+        <a href="/invoices" class="{{ 'active' if active == 'invoices.html' }}">Invoices</a>
+        <a href="/expenses" class="{{ 'active' if active == 'expenses.html' }}">Expenses</a>
+        <a href="/scan" class="{{ 'active' if active == 'scan.html' }}">Scan receipt</a>
+      </nav>
+      <div class="sidebar-foot">
+        <span class="dot {{ 'on' if ai_enabled else 'off' }}"></span>
+        {{ 'Gemini connected' if ai_enabled else 'Offline parser' }}
+        <small>v{{ version }}</small>
+      </div>
+    </aside>
+    <main class="content">
+      <header class="topbar">
+        <div>
+          <h1>{% block heading %}Overview{% endblock %}</h1>
+          <p class="subtitle">{% block subtitle %}Your business at a glance{% endblock %}</p>
+        </div>
+        <form method="post" action="/demo/seed">
+          <button class="ghost" type="submit">Refresh demo data</button>
+        </form>
+      </header>
+      {% if request.query_params.get('saved') or request.query_params.get('seeded') %}
+      <div class="toast" role="status">Done. Changes are live.</div>
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Scan receipt - FinPulse AI{% endblock %}
+{% block heading %}Scan a receipt{% endblock %}
+{% block subtitle %}Upload an image or paste receipt text to extract structured data{% endblock %}
+{% block content %}
+<section class="grid-2">
+  <article class="card">
+    <div class="card-head"><h2>New scan</h2><span class="tag">{{ 'Gemini OCR ready' if ai_enabled else 'Offline text mode' }}</span></div>
+    <form method="post" action="/scan" enctype="multipart/form-data" id="scan-form" class="form">
+      <label for="file">Receipt image or PDF
+        <input id="file" name="file" type="file" accept=".txt,.png,.jpg,.jpeg,.webp,.pdf">
+      </label>
+      <label for="filename">Detected filename
+        <input id="filename" name="filename" value="receipt.txt" placeholder="receipt.jpg">
+      </label>
+      <label for="text">Or paste receipt text
+        <textarea id="text" name="text" rows="10" placeholder="Blue Tokai&#10;12/04/2026&#10;Coffee beans      2 x 450.00&#10;GST 18%            162.00&#10;TOTAL             1,062.00"></textarea>
+      </label>
+      <button type="submit">Extract data</button>
+    </form>
+  </article>
+
+  <article class="card">
+    <div class="card-head"><h2>Extraction result</h2></div>
+    {% if error %}<div class="toast error" role="alert">{{ error }}</div>{% endif %}
+    {% if result %}
+      <div class="result-meta">
+        <span class="tag">{{ result.engine }}</span>
+        <span class="tag">{{ (result.confidence * 100) | round | int }}% confidence</span>
+      </div>
+      <p class="muted">{{ result.note }}</p>
+      <form method="post" action="/scan/save" class="form review">
+        <label>Merchant<input name="merchant" value="{{ result.merchant }}" required></label>
+        <div class="row">
+          <label>Date<input name="spent_at" type="date" value="{{ result.purchase_date or today }}" required></label>
+          <label>Category
+            <select name="category">
+              {% for option in ['Travel','Software','Meals','Office','Marketing','Utilities','Other'] %}
+              <option {{ 'selected' if option == 'Other' }}>{{ option }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        </div>
+        <div class="row">
+          <label>Amount<input name="amount" value="{{ result.total or '0' }}" required></label>
+          <label>Tax<input name="tax" value="{{ result.tax or '0' }}"></label>
+          <label>Currency<input name="currency" value="{{ result.currency }}" maxlength="8"></label>
+        </div>
+        {% if result.items %}
+        <div class="items">
+          <strong>Detected items</strong>
+          <ul>{% for item in result.items %}<li>{{ item.description }} - {{ item.quantity }} x {{ item.amount }}</li>{% endfor %}</ul>
+        </div>
+        {% endif %}
+        <button type="submit">Save as expense</button>
+      </form>
+    {% else %}
+      <div class="placeholder">
+        <img src="/static/logo.svg" alt="" width="72" height="72">
+        <p>Extracted fields will appear here, ready to review and save.</p>
+      </div>
+    {% endif %}
+  </article>
+</section>
+{% endblock %}
