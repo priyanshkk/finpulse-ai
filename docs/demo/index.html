@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FinPulse AI — Guest demo</title>
+<style>
+  :root{--bg:#0b1120;--panel:#111a2e;--line:#24324f;--text:#e8eefc;--muted:#93a4c4;--blue:#38bdf8;--pink:#f472b6;--green:#34d399}
+  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+  button{cursor:pointer;font:inherit;border:0}
+  .wrap{min-height:100vh;display:grid;place-items:center;padding:32px}
+  .login{width:min(420px,100%);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:36px;box-shadow:0 24px 80px #0008;text-align:center}
+  .login img{width:76px;height:76px}
+  h1{font-size:26px;margin:14px 0 4px}h1 em{color:var(--blue);font-style:normal}
+  p{color:var(--muted);margin:0 0 24px}
+  .guest{width:100%;background:var(--blue);color:#04121f;font-weight:800;border-radius:10px;padding:14px}
+  .guest:hover{filter:brightness(1.08)}
+  .fine{font-size:11px;margin-top:16px;color:#64748b}
+  .app{display:none;grid-template-columns:200px 1fr;min-height:100vh}
+  .app.on{display:grid}
+  aside{background:var(--panel);border-right:1px solid var(--line);padding:20px 14px}
+  .brand{display:flex;gap:8px;align-items:center;font-weight:700;margin-bottom:28px}.brand img{width:30px;height:30px}.brand em{color:var(--blue);font-style:normal}
+  nav a{display:block;color:var(--muted);text-decoration:none;padding:9px 12px;border-radius:8px;margin-bottom:4px}
+  nav a.active,nav a:hover{background:#16213a;color:var(--text)}
+  .exit{margin-top:32px;width:100%;background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:8px;font-size:12px}
+  main{padding:26px 30px;max-width:1200px;width:100%}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+  h2{margin:0;font-size:22px}.sub{color:var(--muted);font-size:12px;margin:3px 0 0}
+  .badge{background:#064e3b;color:#6ee7b7;padding:6px 11px;border-radius:99px;font-size:11px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:16px}
+  .kpi span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+  .kpi strong{display:block;font-size:22px;margin:5px 0}.kpi small{color:#64748b;font-size:11px}
+  .grid{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+  .card h3{margin:0 0 18px;font-size:14px}
+  .bars{height:170px;display:flex;align-items:flex-end;gap:14px;padding:0 6px;border-bottom:1px solid var(--line)}
+  .group{flex:1;display:flex;align-items:flex-end;gap:5px;height:100%}
+  .bar{width:50%;border-radius:5px 5px 0 0;height:0;transition:height .8s cubic-bezier(.2,.8,.2,1)}
+  .bar.inv{background:var(--blue)}.bar.exp{background:var(--pink)}
+  .labels{display:flex;gap:14px;padding:7px 6px 0}.labels span{flex:1;text-align:center;color:var(--muted);font-size:10px}
+  .legend{color:var(--muted);font-size:11px;margin-top:14px}.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px}
+  .cats{display:grid;gap:13px}.cat{font-size:11px;color:var(--muted)}.track{height:8px;background:#0d1527;border-radius:99px;margin-top:5px}.fill{height:100%;border-radius:99px;width:0;transition:width .9s ease}
+  .scan{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .receipt{background:#0d1527;border:1px dashed var(--line);border-radius:9px;padding:14px;font:12px/1.7 ui-monospace,monospace;color:#cbd5e1;white-space:pre}
+  .fields{display:grid;gap:8px}.field{display:flex;justify-content:space-between;background:#0d1527;border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:12px;opacity:.35;transition:opacity .4s}
+  .field.show{opacity:1}.field b{color:var(--green)}
+  .note{margin-top:14px;color:var(--muted);font-size:11px}
+  @media(max-width:900px){.app.on{grid-template-columns:1fr}aside{display:none}.kpis,.grid,.scan{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.kpis,.grid,.scan{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap" id="gate">
+  <div class="login">
+    <img src="../assets/logo.svg" alt="FinPulse AI logo" onerror="this.style.display='none'">
+    <h1>FinPulse <em>AI</em></h1>
+    <p>Invoice, expense and receipt tracking — self-hosted.</p>
+    <button class="guest" id="enter">Continue as Guest</button>
+    <div class="fine">Static preview of the real UI. No data is sent anywhere.</div>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside>
+    <div class="brand"><img src="../assets/logo.svg" alt=""><span>FinPulse <em>AI</em></span></div>
+    <nav><a class="active" href="#">Overview</a><a href="#">Invoices</a><a href="#">Expenses</a><a href="#scan">Scan receipt</a></nav>
+    <button class="exit" id="exit">Exit guest mode</button>
+  </aside>
+  <main>
+    <header><div><h2>Overview</h2><p class="sub">Your business at a glance</p></div><span class="badge">Guest · demo data</span></header>
+    <section class="kpis">
+      <div class="card kpi"><span>Total invoiced</span><strong>₹4,82,640</strong><small>14 invoices</small></div>
+      <div class="card kpi"><span>Total expenses</span><strong>₹1,24,180</strong><small>19 receipts</small></div>
+      <div class="card kpi" style="border-color:#2563eb"><span>Net cashflow</span><strong>₹3,58,460</strong><small>invoiced minus spent</small></div>
+      <div class="card kpi"><span>Outstanding</span><strong>₹1,96,320</strong><small>awaiting payment</small></div>
+    </section>
+    <section class="grid">
+      <div class="card">
+        <h3>Cashflow · last 6 months</h3>
+        <div class="bars">
+          <div class="group"><i class="bar inv" data-h="52%"></i><i class="bar exp" data-h="24%"></i></div>
+          <div class="group"><i class="bar inv" data-h="68%"></i><i class="bar exp" data-h="31%"></i></div>
+          <div class="group"><i class="bar inv" data-h="45%"></i><i class="bar exp" data-h="38%"></i></div>
+          <div class="group"><i class="bar inv" data-h="82%"></i><i class="bar exp" data-h="29%"></i></div>
+          <div class="group"><i class="bar inv" data-h="63%"></i><i class="bar exp" data-h="44%"></i></div>
+          <div class="group"><i class="bar inv" data-h="91%"></i><i class="bar exp" data-h="35%"></i></div>
+        </div>
+        <div class="labels"><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span></div>
+        <div class="legend"><i style="background:var(--blue)"></i>Invoiced &nbsp; <i style="background:var(--pink)"></i>Spent</div>
+      </div>
+      <div class="card">
+        <h3>Spend by category</h3>
+        <div class="cats">
+          <div class="cat">Software — ₹38,200<div class="track"><i class="fill" data-w="100%" style="background:#38bdf8"></i></div></div>
+          <div class="cat">Travel — ₹29,450<div class="track"><i class="fill" data-w="77%" style="background:#34d399"></i></div></div>
+          <div class="cat">Meals — ₹21,800<div class="track"><i class="fill" data-w="57%" style="background:#fbbf24"></i></div></div>
+          <div class="cat">Office — ₹18,340<div class="track"><i class="fill" data-w="48%" style="background:#f472b6"></i></div></div>
+          <div class="cat">Marketing — ₹9,600<div class="track"><i class="fill" data-w="25%" style="background:#a78bfa"></i></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="scan" id="scan">
+      <div class="card"><h3>Receipt scan</h3><div class="receipt">Blue Tokai
+12/04/2026
+Coffee beans      2 x 450.00
+GST 18%           162.00
+TOTAL             1,062.00</div></div>
+      <div class="card"><h3>Extracted fields</h3><div class="fields">
+        <div class="field" data-delay="0"><span>Merchant</span><b>Blue Tokai</b></div>
+        <div class="field" data-delay="1"><span>Purchase date</span><b>2026-04-12</b></div>
+        <div class="field" data-delay="2"><span>Total</span><b>₹1,062.00</b></div>
+        <div class="field" data-delay="3"><span>Tax</span><b>₹162.00</b></div>
+        <div class="field" data-delay="4"><span>Items</span><b>2 detected</b></div>
+      </div><div class="note">Engine: offline text parser · confidence 55%</div></div>
+    </section>
+  </main>
+</div>
+<script>
+const gate=document.getElementById('gate'), app=document.getElementById('app');
+document.getElementById('enter').onclick=()=>{
+  gate.style.display='none'; app.classList.add('on');
+  document.querySelectorAll('.bar').forEach((b,i)=>setTimeout(()=>b.style.height=b.dataset.h,120+i*55));
+  document.querySelectorAll('.fill').forEach((f,i)=>setTimeout(()=>f.style.width=f.dataset.w,260+i*70));
+  document.querySelectorAll('.field').forEach(f=>setTimeout(()=>f.classList.add('show'),700+Number(f.dataset.delay)*320));
+};
+document.getElementById('exit').onclick=()=>{app.classList.remove('on');gate.style.display='grid'};
+</script>
+</body>
+</html>
