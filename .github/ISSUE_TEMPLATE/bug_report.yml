@@ -1,0 +1,33 @@
+name: Bug report
+description: Something is broken or behaves unexpectedly
+title: "fix: "
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Include steps to reproduce, expected result and actual result.
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "Docker on Windows 11 / Python 3.12, SQLite"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I removed all API keys and personal data from the report.
+          required: true

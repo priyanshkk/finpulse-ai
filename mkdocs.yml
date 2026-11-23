@@ -1,0 +1,35 @@
+site_name: FinPulse AI
+site_description: Self-hosted invoice and expense tracker with an AI receipt scanner
+site_url: https://priyanshkk.github.io/finpulse-ai/
+repo_url: https://github.com/priyanshkk/finpulse-ai
+repo_name: priyanshkk/finpulse-ai
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: light blue
+      accent: violet
+  features:
+    - navigation.instant
+    - content.code.copy
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - API: api.md
+  - Architecture: architecture.md
+  - Contributing: contributing.md
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/priyanshkk
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.snippets:
+      base_path: ["."]
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
