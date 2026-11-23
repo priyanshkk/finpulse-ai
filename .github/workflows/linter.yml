@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: src
-      DATABASE_URL: sqlite:///:memory:
+      DATABASE_URL: "sqlite:///:memory:"
       SEED_ON_START: "0"
       GEMINI_API_KEY: ""
     steps:

@@ -15,7 +15,7 @@ jobs:
         python-version: ["3.11", "3.12"]
     env:
       PYTHONPATH: src
-      DATABASE_URL: sqlite:///:memory:
+      DATABASE_URL: "sqlite:///:memory:"
       SEED_ON_START: "0"
       GEMINI_API_KEY: ""
     steps:
